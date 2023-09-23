@@ -1,0 +1,27 @@
+{"version": 5,
+ "packagesDir": "lake-packages",
+ "packages":
+ [{"git":
+   {"url": "https://github.com/gebner/quote4",
+    "subDir?": null,
+    "rev": "a387c0eb611857e2460cf97a8e861c944286e6b2",
+    "opts": {},
+    "name": "Qq",
+    "inputRev?": "master",
+    "inherited": false}},
+  {"git":
+   {"url": "https://github.com/JLimperg/aesop",
+    "subDir?": null,
+    "rev": "4f8b397237411249930791f1cba0a9d2880a02dd",
+    "opts": {},
+    "name": "aesop",
+    "inputRev?": "master",
+    "inherited": false}},
+  {"git":
+   {"url": "https://github.com/leanprover/std4",
+    "subDir?": null,
+    "rev": "7149f40ab67056499919535b8dcc244a5a4150af",
+    "opts": {},
+    "name": "std",
+    "inputRev?": "main",
+    "inherited": false}}]}
