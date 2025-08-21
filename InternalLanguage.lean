@@ -78,7 +78,7 @@ mutual
         return ⟨eq ▸ .lam p⟩
       else
         none
-    | .lam T t, _ => failure
+    | .lam .., _ => failure
 
   def inferVar : (Γ : Ctx) → (n : Nat) → Option (Σ' T, Γ ⊢ᵥ n ∶ T)
     | [], _ => failure
