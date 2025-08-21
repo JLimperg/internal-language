@@ -33,14 +33,14 @@ abbrev Ctx := List Ty
 
 /- # Typing Rules -/
 
-@[aesop safe (constructors (transparency! := default))]
+@[aesop safe (transparency! := default) constructors]
 inductive VarHasType : Ctx → Nat → Ty → Prop where
   | zero : VarHasType (T :: Γ) 0 T
   | succ : VarHasType Γ n T → VarHasType (U :: Γ) (n + 1) T
 
 notation : 10 Γ " ⊢ᵥ " n " ∶ " T => VarHasType Γ n T
 
-@[aesop safe (constructors (transparency! := default))]
+@[aesop safe (transparency! := default) constructors]
 inductive HasType : Ctx → Tm → Ty → Prop where
   | var : (Γ ⊢ᵥ n ∶ T) → HasType Γ (.var n) T
   | tt : HasType Γ () ⊤
