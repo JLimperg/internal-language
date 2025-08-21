@@ -227,12 +227,18 @@ example : TTm :=
 example : TTm :=
   ttm%⟨ λ f : Unit → Unit → Unit. λ x : Unit. f x ⟩
 
+/-- error: unknown identifier: y -/
+#guard_msgs in
 example : TTm :=
   ttm%⟨ λ x : Unit. y ⟩
 
+/-- error: type-incorrect! -/
+#guard_msgs in
 example : TTm :=
   ttm%⟨ λ x : Unit. λ y : Unit. x y ⟩
 
+/-- error: type-incorrect! -/
+#guard_msgs in
 example : TTm :=
   ttm%⟨ λ f : (Unit → Unit) → Unit. λ x : Unit. f x ⟩
 
