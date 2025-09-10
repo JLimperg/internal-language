@@ -109,6 +109,7 @@ declare_syntax_cat ty (behavior := both)
 syntax &"Unit" : ty
 syntax ty "→" ty : ty
 syntax "(" ty ")" : ty
+syntax ident : ty
 
 declare_syntax_cat tm (behavior := both)
 
@@ -124,6 +125,13 @@ partial def elabTy : TSyntax `ty → TermElabM Q(Ty)
   | `(ty| Unit) => return q(Ty.unit)
   | `(ty| $T:ty → $U:ty) => return q(Ty.arr $(← elabTy T) $(← elabTy U))
   | `(ty| ($T:ty)) => elabTy T
+  | `(ty| $id:ident) => do
+    let id := id.getId
+    let type ← instantiateMVars (← getConstInfo id).type
+    if ← isDefEq type q(Ty) then
+      return Lean.mkConst id
+    else
+      throwError "identifier '{id}' has type {type}, but expected Ty"
   | _ => throwUnsupportedSyntax
 
 abbrev ElabCtx := List Name
@@ -162,7 +170,11 @@ partial def elabTm : TSyntax `tm → TmElabM Q(Tm)
     if let some i := (← getCtx).getIdx? id then
       return q(Tm.var $i)
     else
-      throwError "unknown identifier: {id}"
+      let type ← instantiateMVars (← getConstInfo id).type
+      if ← isDefEq type q(Tm) then
+        return Lean.mkConst id
+      else
+        throwError "identifier '{id}' has type {type}, but expected Tm"
   | `(tm| ()) =>
     return q(Tm.tt)
   | `(tm| λ $id:ident : $T:ty. $t:tm) => do
@@ -227,7 +239,15 @@ example : TTm :=
 example : TTm :=
   ttm%⟨ λ f : Unit → Unit → Unit. λ x : Unit. f x ⟩
 
-/-- error: unknown identifier: y -/
+def id_unit := tm%⟨ λ x : Unit. x ⟩
+example : TTm :=
+  ttm%⟨ id_unit () ⟩
+
+def T := ⊤ ⇒ ⊤
+example : TTm :=
+  ttm%⟨ λ f : T. λ x : Unit. f x ⟩
+
+/-- error: Unknown constant `y` -/
 #guard_msgs in
 example : TTm :=
   ttm%⟨ λ x : Unit. y ⟩
